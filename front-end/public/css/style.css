@@ -1,0 +1,311 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+::placeholder {
+    color: gray;
+}
+
+.NAVBAR {
+    background-color: #f0f0f0;
+}
+
+.container {
+    max-width: 1400px;
+    width: 95%;
+    margin: 0 auto;
+}
+
+a {
+    text-decoration: none;
+}
+
+ul {
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+a:hover,
+button:hover {
+    cursor: pointer;
+
+}
+
+.logo {
+    display: flex;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar .logo img {
+    max-height: 50px;
+}
+
+.search-bar {
+    display: flex;
+    background-color: white;
+    border-radius: 26px;
+    align-items: stretch;
+    width: 30%;
+}
+
+.search form {
+    position: relative;
+    display: flex;
+    background-color: #e5e5e5;
+}
+
+.search form input[type="search"] {
+    background-color: #ffc0cb00;
+    border: none;
+    outline: none;
+    padding: 10px;
+    width: -webkit-fill-available;
+}
+
+.category {
+    display: flex;
+    align-items: center;
+    background-image: url("./images/selectarrow.png");
+    background-position: right;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.navbar .menu-items {
+    display: none;
+    position: fixed;
+    background-color: #f0f0f0;
+    width: 80%;
+    top: 68px;
+    left: 10%;
+}
+
+.search {
+    border-bottom-right-radius: 17px;
+    overflow: hidden;
+    border-top-right-radius: 17px;
+    width: -webkit-fill-available;
+}
+
+.category-box {
+    position: relative;
+    height: -webkit-fill-available;
+    display: flex;
+    align-items: center;
+    padding: 0 40px 0 20px;
+
+}
+
+input[type="checkbox"] {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    margin: 0;
+    left: 0;
+}
+
+input[type="checkbox"]:checked~.menu-items {
+    display: flex;
+}
+
+.navbar .navbuttons {
+    width: 45%;
+}
+
+.navbar .navbuttons ul {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+}
+
+.search form button {
+    position: absolute;
+    height: 100%;
+    border: none;
+    outline: none;
+    right: 0;
+    width: 60px;
+    background-color: #ffc0cb00;
+    background-image: url("./images/search.png");
+    background-position: right;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.tab {
+    float: left;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+    min-width: 20%;
+    width: auto;
+}
+
+.tab button {
+    display: block;
+    padding: 22px 16px;
+    width: 100%;
+    border: none;
+    outline: none;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+.tab button:hover {
+    background-color: #ddd;
+}
+
+.tab button.active {
+    background-color: #ccc;
+}
+
+.tabcontent {
+    float: left;
+    padding: 0px 12px;
+    width: 80%;
+    border-left: none;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.tabcontent ul {
+    width: 18%;
+    margin: 30px;
+}
+
+.tabcontent ul li:nth-child(1) {
+    font-weight: 600;
+}
+
+.navbar .navbuttons ul li a {
+    padding: 11px 24px;
+    font-size: 18px;
+    color: black;
+    font-weight: 700;
+}
+
+.navbar .navbuttons ul li a#Profile {
+    padding-right: 47px;
+    background-image: url("./images/user.png");
+    background-position: right;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-color: white;
+    border-radius: 27px;
+}
+
+/* ************************Navbar Complete*********** */
+h1.mainh1 {
+    position: relative;
+    margin: 0;
+    padding: 30px 0;
+}
+
+h1.mainh1::before {
+    content: "";
+    position: absolute;
+    width: 100px;
+    height: 5px;
+    bottom: 0;
+    background-color: rgb(0, 0, 0);
+    border-radius: 30px;
+}
+
+h2 {
+    text-align: center;
+}
+
+h4 {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.bannerimg {
+    overflow: hidden;
+    border-radius: 48px;
+    display: flex;
+    margin: 50px 0;
+    box-shadow: #484848 0px 0px 100px -20px, #484848 0px 0px 60px -30px, #484848 0px 0px 6px 0px inset;
+}
+
+.bannerimg img {
+    width: 100%;
+}
+ 
+img {
+    vertical-align: middle;
+} 
+.slideshow-container {
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+    padding: 20px;
+    position: relative;
+}
+.mySlides {
+     padding: 30px 0;
+}
+.prev, .next {
+    cursor: pointer;
+    width: auto;
+    padding: 16px;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.6s ease;
+    border-radius: 3px;
+    background-color: #0000007d;
+}
+.numbertext {
+    position: absolute;
+    top: 14px;
+    left: 0;
+    padding: 5px 30px;
+    background-color: #828282;
+    color: white;
+    font-size: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+.prev:hover,
+.next:hover {
+    background-color: #000000;
+ }
+.slide-controller {
+    width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+}
+.mySlides .Content h3 {
+    background-color: #bfbfbfd6;
+    padding: 20px;
+    border-radius: 36px;
+}
+.mySlides .Content .anss form {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.mySlides .Content .anss form div {
+    width: 50%;
+    padding: 20px;
+}
