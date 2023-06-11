@@ -126,10 +126,10 @@ export default function Lesson() {
                 itm.quizze && (
                   <div className="Ques-Slider">
                     {itm.quizzeResult && itm.quizzeResult.quizzeScore > itm.quizzeResult.min_marks ? (
-                      <p style={{ fontSize: "16px", color: "green" }}>Quizze quelified!!!</p>
+                      <p className="quelifiedTxt">Quizze quelified!!!</p>
                     ) : (
                       <div>
-                        <p>Let's have a quick quizze</p>
+                        <p className="quelifiedTxt startTxt">Let's have a quick quizze</p>
                         <OwlCarousel
                           className="owl-carousel owl-carousel-custom owl-theme lessonOwlCarousel slideshow-container"
                           loop={false}
@@ -203,7 +203,7 @@ export default function Lesson() {
                   </div>
                 )
               ) : (
-                <p>Please Login or signup to give Quizze</p>
+                <p className="quelifiedTxt authTxt">Please Login or Signup to give Quizze</p>
               )}
             </div>
           );

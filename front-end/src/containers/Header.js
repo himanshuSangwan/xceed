@@ -17,6 +17,20 @@ function Header() {
   useEffect(() => {
     getClassList();
   }, []);
+  useEffect(() => {
+    document.body.addEventListener(
+      "click",
+      (e) => {
+        console.log(e.target);
+        var x = document.getElementById("checkbox12");
+        console.log(x.checked, x);
+        if (x.id !== e.target.id) {
+          x.checked = false;
+        }
+      },
+      true
+    );
+  });
   const getUserData = async () => {
     try {
       let resp = await serv.getUser(user?._id);
@@ -56,7 +70,7 @@ function Header() {
             <div className="search-bar">
               <div className="category">
                 <div className="category-box">
-                  <input type="checkbox" name="check" id />
+                  <input type="checkbox" name="check" id="checkbox12" />
                   Courses
                   <div className="menu-items">
                     {classList.length > 0 &&

@@ -468,3 +468,20 @@ img {
 .lessonPage .container h2 {
   text-align: left;
 }
+.quelifiedTxt {
+  font-size: 16px;
+  color: green;
+  height: 40px;
+  background: #c9e5c9;
+  line-height: 40px;
+  padding: 0px 20px;
+  width: 80%;
+}
+.startTxt {
+  color: black;
+  background: #dee6f778;
+}
+.authTxt {
+  color: #ff0000ad;
+  background: #f7dede78;
+}
