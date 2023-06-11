@@ -4,6 +4,7 @@ import LessonService from "../../services/lessonService";
 import SectionService from "../../services/sectionService";
 import QuizzeResultService from "../../services/quizzeResultService";
 import moment from "moment";
+import GlobalContext from "../../context/GlobalContext";
 import OwlCarousel from "react-owl-carousel";
 import ScrollMore from "../../shared/ScrollMore";
 const lessonServ = new LessonService();
@@ -11,6 +12,8 @@ const sectionServ = new SectionService();
 const qResultServ = new QuizzeResultService();
 export default function Lesson() {
   const param = useParams();
+  const globalCtx = useContext(GlobalContext);
+  const [isAuthentiCated, setIsAuthentiCated] = globalCtx.auth;
   const [lessonData, setLessonData] = useState({});
   const [sectionList, setSectionList] = useState([]);
   const [sectionCount, setSectionCount] = useState(0);
@@ -119,84 +122,88 @@ export default function Lesson() {
                 allowFullScreen
                 title="Embedded youtube"
               />
-              {itm.quizze && (
-                <div className="Ques-Slider">
-                  {itm.quizzeResult && itm.quizzeResult.quizzeScore > itm.quizzeResult.min_marks ? (
-                    <p style={{ fontSize: "16px", color: "green" }}>Quizze quelified!!!</p>
-                  ) : (
-                    <div>
-                      <p>Let's have a quick quizze</p>
-                      <OwlCarousel
-                        className="owl-carousel owl-carousel-custom owl-theme lessonOwlCarousel slideshow-container"
-                        loop={false}
-                        margin={20}
-                        responsiveClass={true}
-                        dots={true}
-                        nav={false}
-                        slideBy={1}
-                        // navText={[
-                        //   "<div class='carousel-right-btn-custom'><i class='fa-solid fa-angle-left'></i></div>",
-                        //   "<div class='carousel-right-btn-custom'><i class='fa-solid fa-angle-right'></i></div>",
-                        // ]}
-                        responsive={{
-                          0: {
-                            items: 1,
-                          },
-                          576: {
-                            items: 1,
-                          },
-                          768: {
-                            items: 1,
-                          },
-                        }}
-                      >
-                        {itm.quizze.questions.map((i, j) => {
-                          return (
-                            <div className="mySlides d-block">
-                              <div className="numbertext">
-                                {j + 1} / {itm.quizze.questions.length}
-                              </div>
-                              <div className="Content">
-                                <h3>{i.question}</h3>
-                                <div className="anss">
-                                  <form action>
-                                    {i.option.map((opt) => {
-                                      return (
-                                        <div>
-                                          <input
-                                            type="radio"
-                                            id={opt}
-                                            name={i._id}
-                                            defaultValue={opt}
-                                            onChange={(e) =>
-                                              i.correct_answers.includes(e.target.value)
-                                                ? handleQuizze(itm._id, i.marks)
-                                                : handleQuizze(itm._id, -i.marks)
-                                            }
-                                          />
-                                          <label htmlFor={opt}>{opt}</label>
-                                        </div>
-                                      );
-                                    })}
-                                  </form>
+              {isAuthentiCated ? (
+                itm.quizze && (
+                  <div className="Ques-Slider">
+                    {itm.quizzeResult && itm.quizzeResult.quizzeScore > itm.quizzeResult.min_marks ? (
+                      <p style={{ fontSize: "16px", color: "green" }}>Quizze quelified!!!</p>
+                    ) : (
+                      <div>
+                        <p>Let's have a quick quizze</p>
+                        <OwlCarousel
+                          className="owl-carousel owl-carousel-custom owl-theme lessonOwlCarousel slideshow-container"
+                          loop={false}
+                          margin={20}
+                          responsiveClass={true}
+                          dots={true}
+                          nav={false}
+                          slideBy={1}
+                          // navText={[
+                          //   "<div class='carousel-right-btn-custom'><i class='fa-solid fa-angle-left'></i></div>",
+                          //   "<div class='carousel-right-btn-custom'><i class='fa-solid fa-angle-right'></i></div>",
+                          // ]}
+                          responsive={{
+                            0: {
+                              items: 1,
+                            },
+                            576: {
+                              items: 1,
+                            },
+                            768: {
+                              items: 1,
+                            },
+                          }}
+                        >
+                          {itm.quizze.questions.map((i, j) => {
+                            return (
+                              <div className="mySlides d-block">
+                                <div className="numbertext">
+                                  {j + 1} / {itm.quizze.questions.length}
+                                </div>
+                                <div className="Content">
+                                  <h3>{i.question}</h3>
+                                  <div className="anss">
+                                    <form action>
+                                      {i.option.map((opt) => {
+                                        return (
+                                          <div>
+                                            <input
+                                              type="radio"
+                                              id={opt}
+                                              name={i._id}
+                                              defaultValue={opt}
+                                              onChange={(e) =>
+                                                i.correct_answers.includes(e.target.value)
+                                                  ? handleQuizze(itm._id, i.marks)
+                                                  : handleQuizze(itm._id, -i.marks)
+                                              }
+                                            />
+                                            <label htmlFor={opt}>{opt}</label>
+                                          </div>
+                                        );
+                                      })}
+                                    </form>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          );
-                        })}
-                      </OwlCarousel>
-                      <div className="loginBtn mt-4">
-                        <button
-                          className="btn btnColor w-100 logBTN"
-                          type="button"
-                          onClick={() => submitResult(itm._id, itm.quizze)}
-                        >
-                          Submit
-                        </button>
+                            );
+                          })}
+                        </OwlCarousel>
+                        <div className="loginBtn mt-4">
+                          <button
+                            className="btn btnColor w-100 logBTN"
+                            type="button"
+                            onClick={() => submitResult(itm._id, itm.quizze)}
+                          >
+                            Submit
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </div>
+                    )}
+                  </div>
+                )
+              ) : (
+                <p>Please Login or signup to give Quizze</p>
               )}
             </div>
           );
