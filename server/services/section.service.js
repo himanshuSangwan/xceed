@@ -1,4 +1,5 @@
 const Section = require("../models/Section.model");
+const Quizze = require("../models/Quizze.model");
 
 module.exports = {
   save: async function (sectionObj) {
@@ -58,14 +59,17 @@ module.exports = {
     try {
       if (start === undefined || length === undefined) {
         data = await Section.find(condition).sort({
-          name: "asc",
+          _id: "asc",
         });
       } else {
         data = await Section.find(condition).limit(parseInt(length)).skip(start).sort({
-          name: "asc",
+          _id: "asc",
         });
       }
-
+      data.forEach(async (itm) => {
+        let quizze = await Quizze.findOne({ section_id: itm._id });
+        itm._doc.quizze = quizze;
+      });
       count = await Section.countDocuments(condition);
       result = {
         data: data,

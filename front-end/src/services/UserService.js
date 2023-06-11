@@ -43,8 +43,6 @@ export default class UserService {
   }
 
   login(loginObj) {
-    let device_id = localStorage.getItem("device_id");
-    loginObj.device_id = device_id;
     return util
       .sendApiRequest("/user/login", "POST", true, loginObj)
       .then(

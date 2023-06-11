@@ -27,7 +27,6 @@ function DefaultLayout({ children }) {
     <main className={"w-100 clearfix " + (headerRequired && " socialMediaTheme")}>
       <div className={"themeContant " + (location.pathname.includes("message") && "messageHeightFix")}>
         <Header />
-
         {children}
       </div>
     </main>
