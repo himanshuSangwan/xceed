@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { useNavigate, useLocation, Link, useParams } from "react-router-dom";
 import LessonService from "../../services/lessonService";
 import SectionService from "../../services/sectionService";
@@ -7,6 +7,7 @@ import moment from "moment";
 import GlobalContext from "../../context/GlobalContext";
 import OwlCarousel from "react-owl-carousel";
 import ScrollMore from "../../shared/ScrollMore";
+import Carousel from "../../shared/Carousel";
 const lessonServ = new LessonService();
 const sectionServ = new SectionService();
 const qResultServ = new QuizzeResultService();
@@ -18,6 +19,8 @@ export default function Lesson() {
   const [sectionList, setSectionList] = useState([]);
   const [sectionCount, setSectionCount] = useState(0);
   const [quizzeMarks, setQuizzeMarks] = useState({});
+  const [startPositon, setStartPosition] = useState(1);
+  const startPosition = useRef(0);
   const [search, setSearch] = useState({
     filter: {
       lesson_id: param.lesson_id,
@@ -63,7 +66,6 @@ export default function Lesson() {
     setSearch(searchTemp);
   }
   const handleQuizze = (section_id, marks) => {
-    console.log(section_id, marks);
     let quizzeResult = quizzeMarks;
     if (!quizzeResult[section_id]) {
       quizzeResult[section_id] = 0;
@@ -82,6 +84,9 @@ export default function Lesson() {
       min_marks: detail.min_marks,
     };
     let resp = await qResultServ.sendQuizzeResult(obj);
+    let sectionListTemp = sectionList;
+    sectionListTemp[sectionListTemp.map((i) => i._id).indexOf(id)].quizzeResult = resp.data;
+    setSectionList([...sectionListTemp]);
     if (quizzeMarks[id] > detail.min_marks) {
       alert("Congretulations! You did a great job");
     } else {
@@ -126,22 +131,23 @@ export default function Lesson() {
                 itm.quizze && (
                   <div className="Ques-Slider">
                     {itm.quizzeResult && itm.quizzeResult.quizzeScore > itm.quizzeResult.min_marks ? (
-                      <p className="quelifiedTxt">Quizze quelified!!!</p>
+                      <div className=" quelifiedTxt d-flex justify-content-between">
+                        <p className="">Quizze quelified!!!</p>
+                        <p className="">
+                          {itm.quizzeResult.quizzeScore} / {itm.quizzeResult.totalMarks}
+                        </p>
+                      </div>
                     ) : (
                       <div>
                         <p className="quelifiedTxt startTxt">Let's have a quick quizze</p>
-                        <OwlCarousel
+                        {/* <OwlCarousel
                           className="owl-carousel owl-carousel-custom owl-theme lessonOwlCarousel slideshow-container"
                           loop={false}
                           margin={20}
                           responsiveClass={true}
-                          dots={true}
+                          dots={false}
                           nav={false}
                           slideBy={1}
-                          // navText={[
-                          //   "<div class='carousel-right-btn-custom'><i class='fa-solid fa-angle-left'></i></div>",
-                          //   "<div class='carousel-right-btn-custom'><i class='fa-solid fa-angle-right'></i></div>",
-                          // ]}
                           responsive={{
                             0: {
                               items: 1,
@@ -152,6 +158,10 @@ export default function Lesson() {
                             768: {
                               items: 1,
                             },
+                          }}
+                          startPosition={startPosition.current}
+                          onDragged={({ item, page }) => {
+                            startPosition.current = item.index;
                           }}
                         >
                           {itm.quizze.questions.map((i, j) => {
@@ -188,7 +198,8 @@ export default function Lesson() {
                               </div>
                             );
                           })}
-                        </OwlCarousel>
+                        </OwlCarousel> */}
+                        <Carousel itm={itm} handleQuizze={handleQuizze} />
                         <div className="loginBtn mt-4">
                           <button
                             className="btn btnColor w-100 logBTN"

@@ -21,9 +21,7 @@ function Header() {
     document.body.addEventListener(
       "click",
       (e) => {
-        console.log(e.target);
         var x = document.getElementById("checkbox12");
-        console.log(x.checked, x);
         if (x.id !== e.target.id) {
           x.checked = false;
         }
