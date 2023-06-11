@@ -2,16 +2,19 @@ import { useState, useContext, useEffect } from "react";
 import { useNavigate, useLocation, Link, useParams } from "react-router-dom";
 import LessonService from "../../services/lessonService";
 import SectionService from "../../services/sectionService";
+import QuizzeResultService from "../../services/quizzeResultService";
 import moment from "moment";
 import OwlCarousel from "react-owl-carousel";
 import ScrollMore from "../../shared/ScrollMore";
 const lessonServ = new LessonService();
 const sectionServ = new SectionService();
+const qResultServ = new QuizzeResultService();
 export default function Lesson() {
   const param = useParams();
   const [lessonData, setLessonData] = useState({});
   const [sectionList, setSectionList] = useState([]);
   const [sectionCount, setSectionCount] = useState(0);
+  const [quizzeMarks, setQuizzeMarks] = useState({});
   const [search, setSearch] = useState({
     filter: {
       lesson_id: param.lesson_id,
@@ -56,6 +59,32 @@ export default function Lesson() {
     searchTemp.start = search.start + search.length;
     setSearch(searchTemp);
   }
+  const handleQuizze = (section_id, marks) => {
+    console.log(section_id, marks);
+    let quizzeResult = quizzeMarks;
+    if (!quizzeResult[section_id]) {
+      quizzeResult[section_id] = 0;
+    }
+    quizzeResult[section_id] = quizzeResult[section_id] + marks > 0 ? quizzeResult[section_id] + marks : 0;
+    setQuizzeMarks({ ...quizzeResult });
+  };
+  const submitResult = async (id, detail) => {
+    console.log(id, quizzeMarks[id], detail);
+    let obj = {
+      quizzeScore: quizzeMarks[id],
+      quizzeId: detail._id,
+      sectionId: id,
+      lessonId: detail.lesson_id,
+      totalMarks: detail.total_marks,
+      min_marks: detail.min_marks,
+    };
+    let resp = await qResultServ.sendQuizzeResult(obj);
+    if (quizzeMarks[id] > detail.min_marks) {
+      alert("Congretulations! You did a great job");
+    } else {
+      alert("OOPS! Please try again");
+    }
+  };
   return (
     <div className="lessonPage">
       <div class="container">
@@ -92,64 +121,81 @@ export default function Lesson() {
               />
               {itm.quizze && (
                 <div className="Ques-Slider">
-                  <p>Let's have quick quizze</p>
-                  <OwlCarousel
-                    className="owl-carousel owl-carousel-custom owl-theme lessonOwlCarousel slideshow-container"
-                    loop={false}
-                    margin={20}
-                    responsiveClass={true}
-                    dots={true}
-                    nav={true}
-                    slideBy={1}
-                    // navText={[
-                    //   "<div class='carousel-right-btn-custom'><i class='fa-solid fa-angle-left'></i></div>",
-                    //   "<div class='carousel-right-btn-custom'><i class='fa-solid fa-angle-right'></i></div>",
-                    // ]}
-                    responsive={{
-                      0: {
-                        items: 1,
-                      },
-                      576: {
-                        items: 1,
-                      },
-                      768: {
-                        items: 1,
-                      },
-                    }}
-                  >
-                    {itm.quizze.questions.map((i, j) => {
-                      return (
-                        <div className="mySlides d-block">
-                          <div className="numbertext">
-                            {j + 1} / {itm.quizze.questions.length}
-                          </div>
-                          <div className="Content">
-                            <h3>{i.question}</h3>
-                            <div className="anss">
-                              <form action>
-                                <div>
-                                  <input type="radio" id="A" name="age" defaultValue={30} />
-                                  <label htmlFor="A">Parmjeet Singh Gill</label>
+                  {itm.quizzeResult && itm.quizzeResult.quizzeScore > itm.quizzeResult.min_marks ? (
+                    <p style={{ fontSize: "16px", color: "green" }}>Quizze quelified!!!</p>
+                  ) : (
+                    <div>
+                      <p>Let's have a quick quizze</p>
+                      <OwlCarousel
+                        className="owl-carousel owl-carousel-custom owl-theme lessonOwlCarousel slideshow-container"
+                        loop={false}
+                        margin={20}
+                        responsiveClass={true}
+                        dots={true}
+                        nav={false}
+                        slideBy={1}
+                        // navText={[
+                        //   "<div class='carousel-right-btn-custom'><i class='fa-solid fa-angle-left'></i></div>",
+                        //   "<div class='carousel-right-btn-custom'><i class='fa-solid fa-angle-right'></i></div>",
+                        // ]}
+                        responsive={{
+                          0: {
+                            items: 1,
+                          },
+                          576: {
+                            items: 1,
+                          },
+                          768: {
+                            items: 1,
+                          },
+                        }}
+                      >
+                        {itm.quizze.questions.map((i, j) => {
+                          return (
+                            <div className="mySlides d-block">
+                              <div className="numbertext">
+                                {j + 1} / {itm.quizze.questions.length}
+                              </div>
+                              <div className="Content">
+                                <h3>{i.question}</h3>
+                                <div className="anss">
+                                  <form action>
+                                    {i.option.map((opt) => {
+                                      return (
+                                        <div>
+                                          <input
+                                            type="radio"
+                                            id={opt}
+                                            name={i._id}
+                                            defaultValue={opt}
+                                            onChange={(e) =>
+                                              i.correct_answers.includes(e.target.value)
+                                                ? handleQuizze(itm._id, i.marks)
+                                                : handleQuizze(itm._id, -i.marks)
+                                            }
+                                          />
+                                          <label htmlFor={opt}>{opt}</label>
+                                        </div>
+                                      );
+                                    })}
+                                  </form>
                                 </div>
-                                <div>
-                                  <input type="radio" id="B" name="age" defaultValue={60} />
-                                  <label htmlFor="B">Naresh Kumar</label>
-                                </div>
-                                <div>
-                                  <input type="radio" id="C" name="age" defaultValue={100} />
-                                  <label htmlFor="C">Kala Bhaat</label>
-                                </div>
-                                <div>
-                                  <input type="radio" id="D" name="age" defaultValue={100} />
-                                  <label htmlFor="C">Tau</label>
-                                </div>
-                              </form>
+                              </div>
                             </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </OwlCarousel>
+                          );
+                        })}
+                      </OwlCarousel>
+                      <div className="loginBtn mt-4">
+                        <button
+                          className="btn btnColor w-100 logBTN"
+                          type="button"
+                          onClick={() => submitResult(itm._id, itm.quizze)}
+                        >
+                          Submit
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

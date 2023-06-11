@@ -1,5 +1,6 @@
 const Section = require("../models/Section.model");
 const Quizze = require("../models/Quizze.model");
+const QuizzeResult = require("../models/QuizzeResult.model");
 
 module.exports = {
   save: async function (sectionObj) {
@@ -66,6 +67,12 @@ module.exports = {
           _id: "asc",
         });
       }
+      data.forEach(async (itm) => {
+        if (currUser) {
+          let quizzeReuslt = await QuizzeResult.findOne({ sectionId: itm._id, userId: currUser._id });
+          itm._doc.quizzeResult = quizzeReuslt;
+        }
+      });
       data.forEach(async (itm) => {
         let quizze = await Quizze.findOne({ section_id: itm._id });
         itm._doc.quizze = quizze;
