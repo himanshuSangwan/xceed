@@ -45,11 +45,12 @@ export default function Carousel({ itm, handleQuizze }) {
                           id={opt}
                           name={i._id}
                           defaultValue={opt}
-                          onChange={(e) =>
-                            i.correct_answers.includes(e.target.value)
-                              ? handleQuizze(itm._id, i.marks)
-                              : handleQuizze(itm._id, -i.marks)
-                          }
+                          onChange={(e) => handleQuizze(itm._id, i._id, e.target.value)}
+                          // onChange={(e) =>
+                          //   i.correct_answers.includes(e.target.value)
+                          //     ? handleQuizze(itm._id, i.marks)
+                          //     : handleQuizze(itm._id, -i.marks)
+                          // }
                         />
                         <label htmlFor={opt}>{opt}</label>
                       </div>

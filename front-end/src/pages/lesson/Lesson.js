@@ -18,7 +18,7 @@ export default function Lesson() {
   const [lessonData, setLessonData] = useState({});
   const [sectionList, setSectionList] = useState([]);
   const [sectionCount, setSectionCount] = useState(0);
-  const [quizzeMarks, setQuizzeMarks] = useState({});
+  const [quizzeAns, setQuizzeAns] = useState({});
   const [startPositon, setStartPosition] = useState(1);
   const startPosition = useRef(0);
   const [search, setSearch] = useState({
@@ -65,17 +65,27 @@ export default function Lesson() {
     searchTemp.start = search.start + search.length;
     setSearch(searchTemp);
   }
-  const handleQuizze = (section_id, marks) => {
-    let quizzeResult = quizzeMarks;
+  const handleQuizze = (section_id, question_id, answer, marks) => {
+    let quizzeResult = quizzeAns;
     if (!quizzeResult[section_id]) {
-      quizzeResult[section_id] = 0;
+      quizzeResult[section_id] = {};
     }
-    quizzeResult[section_id] = quizzeResult[section_id] + marks > 0 ? quizzeResult[section_id] + marks : 0;
-    setQuizzeMarks({ ...quizzeResult });
+
+    // quizzeResult[section_id] = quizzeResult[section_id] + marks > 0 ? quizzeResult[section_id] + marks : 0;
+    quizzeResult[section_id] = { ...quizzeResult[section_id], [question_id]: answer };
+    setQuizzeAns({ ...quizzeResult });
   };
   const submitResult = async (id, detail) => {
+    let marks = 0;
+    let submitedAnswers = quizzeAns[id] ? quizzeAns[id] : {};
+    for (let ques of detail.questions) {
+      if (ques.correct_answers.includes(submitedAnswers[ques._id])) {
+        marks += ques.marks;
+      }
+    }
+    // console.log(detail.questions, marks);
     let obj = {
-      quizzeScore: quizzeMarks[id],
+      quizzeScore: marks,
       quizzeId: detail._id,
       sectionId: id,
       lessonId: detail.lesson_id,
@@ -86,7 +96,7 @@ export default function Lesson() {
     let sectionListTemp = sectionList;
     sectionListTemp[sectionListTemp.map((i) => i._id).indexOf(id)].quizzeResult = resp.data;
     setSectionList([...sectionListTemp]);
-    if (quizzeMarks[id] > detail.min_marks) {
+    if (marks > detail.min_marks) {
       alert("Congretulations! You did a great job");
     } else {
       alert("OOPS! Please try again");
